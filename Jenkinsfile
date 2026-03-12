@@ -47,21 +47,34 @@ pipeline {
             }
         }
 
-        // Uncomment and configure once EKS cluster is ready
-        // stage('Deploy to EKS') {
-        //     steps {
-        //         withCredentials([[
-        //             $class: 'AmazonWebServicesCredentialsBinding',
-        //             credentialsId: 'aws-creds'
-        //         ]]) {
-        //             sh '''
-        //                 aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}
-        //                 kubectl set image deployment/loadgenerator \
-        //                     loadgenerator=${IMAGE_NAME} -n ${NAMESPACE}
-        //             '''
-        //         }
-        //     }
-        // }
+        stage('Update GitOps Deployment') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USERNAME',
+                    passwordVariable: 'GIT_PASSWORD'
+                )]) {
+                    sh '''
+                        if [ -d "gitops" ]; then
+                            echo "gitops directory exists. Removing it..."
+                            rm -rf gitops
+                        fi
+                        git clone https://$GIT_USERNAME:$GIT_PASSWORD@github.com/ITkannadigaru/GitOps.git gitops
+                        cd gitops/base/loadgenerator/
+
+                        git config user.email "jenkins@ci.com"
+                        git config user.name "jenkins"
+
+                        # Update image tag
+                        sed -i "s|image: .*loadgenerator.*|image: ${IMAGE_NAME}|g" deployment.yaml
+
+                        git add .
+                        git commit -m "Update loadgenerator image to ${IMAGE_NAME}"
+                        git push origin main
+                    '''
+                }
+            }
+        }
 
     }
 
