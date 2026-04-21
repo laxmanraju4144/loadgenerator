@@ -20,7 +20,7 @@ pipeline {
             steps {
                 dir('loadgenerator/') {   // directory containing Dockerfile
                     sh '''
-                        ls -l
+                        ls -R
                         docker build -t ${IMAGE_NAME} .
                     '''
                 }

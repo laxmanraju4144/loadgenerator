@@ -1,5 +1,3 @@
-
-
 FROM python:3.14-alpine AS base
 
 FROM base AS builder
@@ -35,4 +33,3 @@ COPY locustfile.py .
 ENV GEVENT_SUPPORT=True
 
 ENTRYPOINT locust --host="http://${FRONTEND_ADDR}" --headless -u "${USERS:-10}" -r "${RATE:-1}" 2>&1
-
