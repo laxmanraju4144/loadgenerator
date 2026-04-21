@@ -18,8 +18,8 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-              dir('src/loadgenerator') {
-            sh '''
+              dir('loadgenerator') {
+             sh '''
                 ls -l
                 docker build -t ${IMAGE_NAME} .
             '''
