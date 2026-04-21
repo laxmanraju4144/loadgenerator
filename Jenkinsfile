@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "laxmanraju/loadgenerator:${GIT_COMMIT}"
-        AWS_REGION = "us-east-1"
+        IMAGE_NAME   = "laxmanraju/loadgenerator:${GIT_COMMIT}"
+        AWS_REGION   = "us-east-1"
         CLUSTER_NAME = "itkannadigaru-cluster"
-        NAMESPACE     = "itkannadigaru"
+        NAMESPACE    = "itkannadigaru"
     }
 
     stages {
@@ -18,14 +18,14 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-              dir('loadgenerator') {
-             sh '''
-                ls -l
-                docker build -t ${IMAGE_NAME} .
-            '''
+                dir('loadgenerator') {   // directory containing Dockerfile
+                    sh '''
+                        ls -l
+                        docker build -t ${IMAGE_NAME} .
+                    '''
+                }
             }
         }
-       }
 
         stage('Login to Docker Hub') {
             steps {
@@ -69,13 +69,12 @@ pipeline {
                         sed -i "s|image: .*loadgenerator.*|image: ${IMAGE_NAME}|g" deployment.yaml
 
                         git add .
-                        git commit -m "Update loadgenerator image to ${IMAGE_NAME}"
+                        git commit -m "Update loadgenerator image to ${IMAGE_NAME}" || echo "No changes to commit"
                         git push origin main
                     '''
                 }
             }
         }
-
     }
 
     post {
