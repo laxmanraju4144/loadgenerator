@@ -18,7 +18,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dir('loadgenerator/Dockerfile') {
+                dir('src/loadgenerator/Dockerfile') {
                     sh '''
                         printenv
                         docker build -t ${IMAGE_NAME} .
