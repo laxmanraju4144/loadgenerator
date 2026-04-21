@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "manojkrishnappa/loadgenerator:${GIT_COMMIT}"
+        IMAGE_NAME = "laxmanraju/loadgenerator:${GIT_COMMIT}"
         AWS_REGION = "us-west-2"
         CLUSTER_NAME = "itkannadigaru-cluster"
         NAMESPACE     = "itkannadigaru"
@@ -12,7 +12,7 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git url: 'https://github.com/ManojKRISHNAPPA/Microservice.git', branch: 'main'
+                git url: 'https://github.com/laxmanraju4144/loadgenerator.git', branch: 'main'
             }
         }
 
@@ -59,7 +59,7 @@ pipeline {
                             echo "gitops directory exists. Removing it..."
                             rm -rf gitops
                         fi
-                        git clone https://$GIT_USERNAME:$GIT_PASSWORD@github.com/ITkannadigaru/GitOps.git gitops
+                        git clone https://$GIT_USERNAME:$GIT_PASSWORD@github.com/laxmanraju4144/GitOps.git gitops
                         cd gitops/base/loadgenerator/
 
                         git config user.email "jenkins@ci.com"
