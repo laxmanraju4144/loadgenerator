@@ -18,14 +18,14 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dir('src/loadgenerator/Dockerfile') {
-                    sh '''
-                        printenv
-                        docker build -t ${IMAGE_NAME} .
-                    '''
-                }
+              dir('src/loadgenerator') {
+            sh '''
+                ls -l
+                docker build -t ${IMAGE_NAME} .
+            '''
             }
         }
+       }
 
         stage('Login to Docker Hub') {
             steps {
