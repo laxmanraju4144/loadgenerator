@@ -18,13 +18,12 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dir('loadgenerator') {
                 sh '''
+                    printenv
                       docker build -t ${IMAGE_NAME} .
                 '''
                 }
             }
-        }
 
         stage('Login to Docker Hub') {
             steps {
